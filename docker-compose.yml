@@ -1,0 +1,38 @@
+redis:
+  image: redis
+
+postgres:
+  image: postgres
+  environment:
+    POSTGRES_PASSWORD: secret
+    POSTGRES_USER: sentry
+  volumes:
+    - /var/data/sentry/postgre:/var/lib/postgresql/data:rw
+sentry:
+  image: sentry:8.3
+  ports:
+    - 9000:9000
+  links:
+    - redis
+    - postgres
+  environment:
+    SENTRY_SECRET_KEY: 'YOUR_SECRET_KEY'
+  volumes:
+    - ./sentry.conf.py:/etc/sentry/sentry.conf.py:rw
+celerybeat:
+  image: sentry:8.3
+  links:
+    - redis
+    - postgres
+  command: sentry celery beat
+  environment:
+    SENTRY_SECRET_KEY: 'YOUR_SECRET_KEY'
+
+celeryworker:
+  image: sentry:8.3
+  links:
+    - redis
+    - postgres
+  command: sentry celery worker
+  environment:
+    SENTRY_SECRET_KEY: 'YOUR_SECRET_KEY'
