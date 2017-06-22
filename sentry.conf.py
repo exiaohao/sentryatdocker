@@ -273,6 +273,6 @@ if 'SENTRY_RUNNING_UWSGI' not in os.environ and len(secret_key) < 32:
 
 SENTRY_OPTIONS['system.secret-key'] = secret_key
 
-TIME_ZONE='Asia/Shanghai'
+TIME_ZONE='UTC'
 SENTRY_DEFAULT_TIME_ZONE='Asia/Shanghai'
 
